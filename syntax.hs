@@ -18,7 +18,6 @@ type Pars = [Name]
 type Vals = [Num]
 
 type Name = String
-
 type Num = Int
 
 instance Show Mode where
