@@ -33,6 +33,10 @@ instance Show Pos where
 
 --Abstract Syntax:
 
+
+--(c) Define a Haskell function steps :: Int -> Cmd that constructs a Mini Logo
+--program which draws a stair of n steps
+
 -- Exercise 2. Digital Circuit Design language
 
 
