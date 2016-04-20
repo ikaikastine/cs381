@@ -80,3 +80,18 @@ printCircuit :: Circuit -> String
 printCircuit (Circuit gates links) = printGates gates ++ printLinks links
 
 -- Exercise 3. Designing Abstract Syntax
+--Abstract syntax, changed N to I since it was previously declared above
+data Expr = I Int
+          | Plus Expr Expr
+          | Times Expr Expr
+          | Neg Expr
+
+--Alternative abstract syntax
+data Op = Add | Multiply | Negate deriving Show
+
+data Exp = Num Int
+          | Apply Op [Exp]
+          deriving Show
+
+--(a) Represent the expression -(3+4)*7 in the alternative abstract syntax
+expression = Apply Multiply [Apply Negate [Apply Add [Num 3, Num 4]], Num 7]
