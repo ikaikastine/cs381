@@ -1,7 +1,6 @@
 import Prelude hiding (Num)
 -- Exercise 1. Mini Logo
 --(a) Define the abstract syntax for Mini Logo as a Haskell data type
-
 data Cmd = Pen Mode
           | MoveTo Pos Pos
           | Def Name Pars Cmd
@@ -74,8 +73,10 @@ printGates (Gate i gatefn gates) = show i ++ ":" ++ show gatefn ++ ";\n"
 
 printLinks :: Links -> String
 printLinks LNone = ""
-printLinks (Link pair1 pair2 links)
+printLinks (Link pair1 pair2 links) = "from " ++ printPair pair1 ++ " to " ++
+          printPair pair2 ++ ";\n" ++ printLinks links
 
-
+printCircuit :: Circuit -> String
+printCircuit (Circuit gates links) = printGates gates ++ printLinks links
 
 -- Exercise 3. Designing Abstract Syntax
