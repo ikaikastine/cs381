@@ -26,10 +26,15 @@ type Num = Int
 
 --Abstract Syntax:
 vector = Def "vector" ["x1", "y1", "x2", "y2"] (Func [Pen Down, MoveTo (N "x1") (N "y1"), MoveTo (N "x2") (N "y2"), Pen Up])
---vector = Def "vector" ["x1", "y1", "x2", "y2"] Func [ Pen Down, MoveTo("x1", "y1"), MoveTo("x2", "y2"), Pen Up]
+
 --(c) Define a Haskell function steps :: Int -> Cmd that constructs a Mini Logo
 --program which draws a stair of n steps
+steps :: Int -> Cmd
 
+steps a | a <= 1 = Func [Call "vector" [0, 0, 0, 1], Call "vector" [0, 1, 1, 1]]
+steps a = Func [steps (a-1), Func [Call "vector" [a-1, a-1, a-1, a], Call "vector" [a-1, a, a, a]]]
+
+--steps a = Func [steps (a-1), Func [Call "vector" [a-1, a-1, a-1, a], Call "vector" [a-1, a, a, a]]
 -- Exercise 2. Digital Circuit Design language
 
 
