@@ -95,3 +95,33 @@ data Exp = Num Int
 
 --(a) Represent the expression -(3+4)*7 in the alternative abstract syntax
 expression = Apply Multiply [Apply Negate [Apply Add [Num 3, Num 4]], Num 7]
+
+--(b) What are advantanges or disadvantages of either representation?
+{-
+  Some advantanges of the alternate abstract syntax is that it is more portable
+  and has the ability to be used with a variety of different expressions. The
+  operator can be applied to an endless number of expressions, thus allowing it
+  to be more flexible. In contrast, the first abstract syntax limits the
+  expression in terms of what it can do. You can only add two expressions,
+  multiply two expressions, or a negate a single expression. With the second
+  implementation, you have the freedom to do all three operations with as many
+  expressions as you would like.
+-}
+
+
+--(c) Define a function translate :: Expr -> Expr that translates expressions
+--given in the first abstract syntax into equivalent expressions in the second
+--abstract syntax
+
+{-
+translate :: Expr -> Exp
+translate (I x) = (Num x)
+translate (Plus x y) = Apply Add [translate x, translate y]
+translate (Times x y) = Apply Multiply [translate x, translate y]
+translate (Neg x) = Apply Negate [translate x]
+-}
+translate :: Expr -> Exp
+translate (I x) = (Num x)
+translate (Plus x y) = Apply Add [(translate x), (translate y)]
+translate (Times x y) = Apply Multiply [translate x, translate y]
+translate (Neg x) = Apply Negate [translate x]
