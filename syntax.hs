@@ -24,7 +24,8 @@ type Num = Int
 --syntax, that is, as a Haskell data type value.
 
 --Abstract Syntax:
-vector = Def "vector" ["x1", "y1", "x2", "y2"] (Func [Pen Down, MoveTo (N "x1") (N "y1"), MoveTo (N "x2") (N "y2"), Pen Up])
+vector = Def "vector" ["x1", "y1", "x2", "y2"]
+  (Func [Pen Down, MoveTo (N "x1") (N "y1"), MoveTo (N "x2") (N "y2"), Pen Up])
 
 --(c) Define a Haskell function steps :: Int -> Cmd that constructs a Mini Logo
 --program which draws a stair of n steps
