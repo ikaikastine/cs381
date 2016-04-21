@@ -32,7 +32,8 @@ vector = Def "vector" ["x1", "y1", "x2", "y2"]
 steps :: Int -> Cmd
 
 steps a | a <= 1 = Func [Call "vector" [0, 0, 0, 1], Call "vector" [0, 1, 1, 1]]
-steps a = Func [steps (a-1), Func [Call "vector" [a-1, a-1, a-1, a], Call "vector" [a-1, a, a, a]]]
+steps a = Func [steps (a-1),
+  Func [Call "vector" [a-1, a-1, a-1, a], Call "vector" [a-1, a, a, a]]]
 
 -- Exercise 2. Digital Circuit Design language
 --(a) Define the abstract syntax for the above language as a Haskell data type
