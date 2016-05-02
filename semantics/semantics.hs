@@ -61,6 +61,12 @@ type Prog2 = [Cmd2]
 type Macros = [(String, Prog)]
 type State = (Macros, Maybe Stack)
 
+data ProgMacro = P Prog2
+             | M Macros
+             deriving Show
+
+type E = Maybe State -> Maybe State
+
 -- (c) Define the semantics for the extended language as a function sem2. As in
 -- exercise 1, you probably want to define an auxilary function semCmd2 for the
 -- semantics of individual operations.
@@ -73,7 +79,12 @@ semCmd2 (C c) (m, st) = m, semCmd (C c) st
 semCmd2 (DEF cmd p) (m, st) = [(cmd, p)] ++ m, st
 semCmd2 (CALL cmd) (m, st) = semCmd2 cmd (m, st)
 semCmd2 c          (m, st) = (m, map semCmd2 nCmd)
-                            where nCmd = snd (c, prog):m 
+                            where nCmd = snd (c, prog):m
+
+eval2 :: ProgMacro -> Macros
+eval2 p = sem2 p (Just [])
+
+macroTest1 = [DEF "foo" [DUP, ADD, MULT]] -- [("foo", [DUP, ADD, MULT])]
 
 -- Exercise 3. Mini Logo
 data Cmd = Pen Mode
