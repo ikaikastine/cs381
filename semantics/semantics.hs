@@ -1,5 +1,5 @@
  -- Kevin Stine
-module Semantics where
+module HW2 where
 -- Exercise 1. A Stack Language
 
 {- Consider the stack language S defined by the following grammer
