@@ -1,5 +1,5 @@
  -- Kevin Stine
-
+module Semantics where
 -- Exercise 1. A Stack Language
 
 {- Consider the stack language S defined by the following grammer
@@ -17,33 +17,33 @@ data Cmd = LD Int
 
 type Stack = [Int]
 
-type D = Maybe Stack -> Maybe Stack
+type D = Stack -> Maybe Stack
 
 {-prog :: [Cmd] -> Stack -> Maybe Stack
 prog ([x]) y = semCmd x y
 prog (x:xs) ys = prog xs (semCmd x ys)
 prog [] _ = Nothing
 -}
-sem :: Prog -> D
-sem [] a = a
-sem (x:xs) a = sem xs (semCmd x a)
+sem :: Prog -> Stack -> Maybe Stack
+sem ([x]) y = semCmd x y
+sem (x:xs) ys = sem xs (unMaybe (semCmd x ys))
+sem [] _ = Nothing
 
-semCmd :: Cmd -> D
-semCmd (LD a) xs = case xs of Just xs         -> Just ([a] ++ xs)
-                              _               -> Nothing
-semCmd (ADD)  xs = case xs of Just (x1:x2:xs) -> Just ([x1+x2] ++ xs)
-                              _               -> Nothing
-semCmd (MULT) xs = case xs of Just (x1:x2:xs) -> Just ([x1*x2] ++ xs)
-                              _               -> Nothing
-semCmd (DUP)  xs = case xs of Just (x1:xs)    -> Just ([x1,x1] ++ xs)
-                              _               -> Nothing
-eval :: Prog -> Maybe Stack
-eval p = sem p (Just [])
+semCmd :: Cmd -> Stack -> Maybe Stack
+semCmd (LD a) xs = Just ([a] ++ xs)
+semCmd (ADD)  (x:y:xs) = Just ((x+y):xs)
+semCmd (MULT) (x:y:xs) = Just ((x*y):xs)
+semCmd (DUP)  (x:xs) = Just ([x,x] ++ xs)
+
+eval :: Prog -> Stack -> Maybe Stack
+eval x [] = sem x []
+eval _ _ = Nothing
 
 -- Test data
 test1 = [LD 3, DUP, ADD, DUP, MULT] -- [3] -> [3,3] -> [6] -> [6,6] -> Just [36]
 test2 = [LD 3, ADD] -- Nothing
 test3 = [] -- Just []
+test4 = [LD 4, LD 5, ADD]
 
 
 -- Exercise 2. Extending the Stack Language by Macros
@@ -64,27 +64,47 @@ data Cmd2 = Define Name Prog2
 -- could thus be defined as follows
 
 type Macros = [(Name, Prog2)]
-type State = (Macros, Maybe Stack)
+type State = (Macros, Stack)
+
+dup :: Cmd2
+dup = Basic DUP
+add :: Cmd2
+add = Basic ADD
+mult :: Cmd2
+mult = Basic MULT
+load :: Int -> Cmd2
+load n = Basic (LD n)
+
+-- Macro to calculate the square of a number of the argument on the stack
+sqr :: Cmd2
+sqr = Define "square" [dup,mult]
+
+-- Macro to double the argument on the top of the stack
+double :: Cmd2
+double = Define "double" [dup,add]
 
 -- (c) Define the semantics for the extended language as a function sem2. As in
 -- exercise 1, you probably want to define an auxilary function semCmd2 for the
 -- semantics of individual operations.
 sem2 :: Prog2 -> State -> Maybe State
-sem2 [] _ = Nothing
 sem2 ([x]) y = semCmd2 x y
-sem2 (p:ps) s = sem2 ps (Maybe (semCmd2 p s))
+sem2 (x:xs) ys = sem2 xs (unMaybe (semCmd2 x ys))
+sem2 [] _ = Nothing
 
 semCmd2 :: Cmd2 -> State -> Maybe State
-semCmd2 (Basic c) (m, s) = Just (m, semCmd c s)
+semCmd2 (Basic c) (m, s) = Just (m, unMaybe(semCmd c s))
 semCmd2 (Define n p) (m,s) = Just (m ++ [(n,p)], s)
-semCmd2 (Call n) (m,s) = sem2 (lookup n m) (m,s)
+semCmd2 (Call n) (m,s) = sem2 (unMaybe (lookup n m)) (m,s)
 
+unMaybe :: Maybe t -> t
+unMaybe (Just x) = x
+unMaybe (Nothing) = undefined
 
+evalMacro :: Prog2 -> Maybe Stack
+evalMacro x = Just (snd (unMaybe (sem2 x ([],[]))))
 
---eval2 :: ProgMacro -> Macros
---eval2 p = sem2 p (Just [])
-
---macroTest1 = [Define "foo" [DUP, ADD, MULT]] -- [("foo", [DUP, ADD, MULT])]
+macroTest1 = [sqr, load 5, sqr, Call "square"] -- Just [25]
+macroTest2 = [double, load 22, double, Call "double"] -- Just [44]
 
 -- Exercise 3. Mini Logo
 {-
