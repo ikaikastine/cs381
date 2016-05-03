@@ -107,19 +107,39 @@ macroTest1 = [sqr, load 5, sqr, Call "square"] -- Just [25]
 macroTest2 = [double, load 22, double, Call "double"] -- Just [44]
 
 -- Exercise 3. Mini Logo
-{-
-data Cmd = Pen Mode
-         | MoveTo Int Int
-         | Seq Cmd Cmd
+data Cmd3 = Pen Mode
+          | MoveTo Int Int
+          | Seq Cmd3 Cmd3
+          deriving (Eq, Show)
 
 data Mode = Up | Down
+          deriving (Eq, Show)
 
-type State = (Mode, Int, Int)
-
+type State2 = (Mode, Int, Int)
 type Line = (Int, Int, Int, Int)
 type Lines = [Line]
 
-semS :: Cmd -> State -> (State, Lines)
+semS :: Cmd3 -> State2 -> (State2, Lines)
 
-sem' :: Cmd -> Lines
--}
+semS (Pen m1) s@(m2, x, y) | m1 /= m2 = ((m1, x, y), [])
+                           | otherwise = (s, [])
+
+semS (MoveTo x1 y1) (m, x2, y2) | m == Up = (ns, [])
+                                | x1 /= x2 && y1 /= y2 = (ns, [(x2, y2, x1, y1)])
+                                | otherwise = (ns, [])
+                                where ns = (m, x1, y1)
+
+semS (Seq a b) s = (fst s2, snd s1 ++ snd s2) where
+                  s1 = semS a s
+                  s2 = semS b (fst s1)
+
+sinit = (Up, 0, 0)
+
+sem' :: Cmd3 -> Lines
+
+sem' a = snd (semS a sinit)
+
+moveTest1 = Pen Down `Seq` MoveTo 1 1
+semTest1 = sem' moveTest1 -- [(0, 0, 1, 1)]
+moveTest2 = Pen Down `Seq` MoveTo 2 4 `Seq` MoveTo 3 5
+semTest2 = sem' moveTest2 -- [(0, 0, 2, 4), (2, 4, 3, 5)]
