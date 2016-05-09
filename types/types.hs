@@ -56,3 +56,5 @@ rank _ _                    = Nothing
 -- that first calls the function rankP to check whether the stack program
 -- is type correct and evaluates the program only in that case. For performing
 -- the actual evaluation semStatTC calls the function sem.
+
+-- TODO: add in section b
