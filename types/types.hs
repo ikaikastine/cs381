@@ -57,4 +57,74 @@ rank _ _                    = Nothing
 -- is type correct and evaluates the program only in that case. For performing
 -- the actual evaluation semStatTC calls the function sem.
 
--- TODO: add in section b
+-- TODO: add in exercise 1section b
+
+
+-- Exercise 2. Shape Language
+
+-- TODO: all of section 2
+
+data Shape = x
+           | TD Shape Shape
+           | LR Shape Shape
+           deriving Show
+
+type BBox = (Int, Int)
+
+-- (a) Define a type checker for the shape language as a Haskell function
+
+bbox :: Shape -> BBox
+
+
+
+-- (b) Rectangles are a subset of shapes and thus describe a more restricted
+-- set of types. By restricting the applciation of the TD and LR operations to
+-- rectangles only one could ensure that only convex shapes without holes can
+-- be constructed. Define a type checker for the shape langugage that assigns
+-- types only to rectangular shapes by defining a Haskell function
+
+rect :: Shape -> Maybe BBox
+
+
+
+-- Exercise 3. Parametric Polymorphism
+-- (a) Consider the functions f and g, which are given by the following two
+-- function definitions.
+
+-- TODO: all of exercise 3
+
+{-
+f x y = if null x then [y] else x
+g x y = if not (null x) then [] else [y]
+
+(1) What are the types of f and g?
+
+
+
+(2) Explain why the functions have these types.
+
+
+
+(3) Which type is more general?
+
+
+
+
+(4) Why do f and g have different types?
+
+
+
+-}
+
+-- (b) Find a (simple) definition for a function h that has the following type
+h :: [b] -> [(a, b)] -> [b]
+
+
+
+
+-- (c) Find a (simple) definition for a function k that has the following type
+k :: (a -> b) -> ((a -> b) -> a) -> b
+
+
+-- (d) Can you define a function of type a -> b? If yes, explain your
+-- definition. If not, explain why it is so difficult.
