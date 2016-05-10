@@ -122,6 +122,11 @@ rect (LR i j) = case rect i of
       True -> Just (ix + jx, iy)
       False -> Nothing
 
+-- Test shapes
+r1 = TD (LR X X) (LR X X)
+r2 = TD (LR X X) X
+r3 = LR (TD r1 X) (LR r2 r2)
+
 -- Exercise 3. Parametric Polymorphism
 -- (a) Consider the functions f and g, which are given by the following two
 -- function definitions.
@@ -177,4 +182,4 @@ h b _ = b
     to ensure that the old and new types have identical internal
     representations to prevent runtime corruption. To define a function like
     this, I would need to know the internal representations of both types.
-  }
+  -}
