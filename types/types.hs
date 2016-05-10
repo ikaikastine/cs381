@@ -57,12 +57,25 @@ rank _ _                    = Nothing
 -- is type correct and evaluates the program only in that case. For performing
 -- the actual evaluation semStatTC calls the function sem.
 
--- TODO: add in exercise 1section b
+data Type = A Stack | TypeError deriving Show
 
+typeSafe :: Prog -> Bool
+typeSafe p = (rankP p) /= Nothing
+
+semStatTC :: Prog -> Type
+semStatTC p | typeSafe p = A (sem p [])
+            | otherwise = TypeError
+
+{-
+  What is the new type of the function sem and why can the function definition
+  be simplified to have this type?
+
+  The new type of sem is Prog -> D. D = Stack -> Stack. Type D can be
+  simplified to no longer contain Maybe Stacks, because the type checker
+  handles all TypeErrors
+-}
 
 -- Exercise 2. Shape Language
-
--- TODO: all of section 2
 
 data Shape = x
            | TD Shape Shape
@@ -74,8 +87,17 @@ type BBox = (Int, Int)
 -- (a) Define a type checker for the shape language as a Haskell function
 
 bbox :: Shape -> BBox
+bbox (TD i j) | ix >= jx = (ix, iy + jy)
+              | ix < jx = (jx, iy + jy)
+              where (ix, iy) = bbox i
+                    (jx, jy) = bbox j
 
+bbox (LR i j) | iy >= jy = (ix + jy, iy)
+              | iy < jy = (ix + jx, jy)
+              where (ix, iy) = bbox i
+                    (jx, jy) = bbox j
 
+bbox X = (1, 1)
 
 -- (b) Rectangles are a subset of shapes and thus describe a more restricted
 -- set of types. By restricting the applciation of the TD and LR operations to
@@ -84,6 +106,17 @@ bbox :: Shape -> BBox
 -- types only to rectangular shapes by defining a Haskell function
 
 rect :: Shape -> Maybe BBox
+rect X = Just (1, 1)
+rect (TD i j) = case rect i of
+  Nothing -> Nothing Just (ix, iy) -> case rect j of
+    Nothing -> Nothing Just (jx, jy) -> case (ix == jx) of
+      True -> Just (ix, oy + jy)
+      False -> Nothing
+rect (LR i j) = case rect i of
+  Nothing -> Nothing Just (ix, iy) -> case rect j of
+    Nothing -> Nothing Just (jx, jy) -> case (iy == jy) of
+      True -> Just (ix + jx, iy)
+      False -> Nothing
 
 
 
