@@ -77,7 +77,7 @@ semStatTC p | typeSafe p = A (sem p [])
 
 -- Exercise 2. Shape Language
 
-data Shape = x
+data Shape = X
            | TD Shape Shape
            | LR Shape Shape
            deriving Show
@@ -108,17 +108,19 @@ bbox X = (1, 1)
 rect :: Shape -> Maybe BBox
 rect X = Just (1, 1)
 rect (TD i j) = case rect i of
-  Nothing -> Nothing Just (ix, iy) -> case rect j of
-    Nothing -> Nothing Just (jx, jy) -> case (ix == jx) of
-      True -> Just (ix, oy + jy)
+  Nothing -> Nothing
+  Just (ix, iy) -> case rect j of
+    Nothing -> Nothing
+    Just (jx, jy) -> case (ix == jx) of
+      True -> Just (ix, iy + jy)
       False -> Nothing
 rect (LR i j) = case rect i of
-  Nothing -> Nothing Just (ix, iy) -> case rect j of
-    Nothing -> Nothing Just (jx, jy) -> case (iy == jy) of
+  Nothing -> Nothing
+  Just (ix, iy) -> case rect j of
+    Nothing -> Nothing
+    Just (jx, jy) -> case (iy == jy) of
       True -> Just (ix + jx, iy)
       False -> Nothing
-
-
 
 -- Exercise 3. Parametric Polymorphism
 -- (a) Consider the functions f and g, which are given by the following two
@@ -126,38 +128,53 @@ rect (LR i j) = case rect i of
 
 -- TODO: all of exercise 3
 
-{-
 f x y = if null x then [y] else x
 g x y = if not (null x) then [] else [y]
 
+{-
 (1) What are the types of f and g?
 
-
+  f :: [t] -> t -> [t]
+  g :: Flodable t => t a -> t1 -> [t1]
 
 (2) Explain why the functions have these types.
 
+  The function f returns x or [y], however since x is a list, both x and y have
+  to have the same type which is a list.
 
+  The function g returns either an empty list [] or [y], however in this
+  instance, x and y have no relation since the function will not return x.
 
 (3) Which type is more general?
 
-
-
+  Both f and g are designed to work with any type, however since g can work
+  with more than one type, it is more general.
 
 (4) Why do f and g have different types?
 
-
-
+  They are different because of the Haskell type inference which means that
+  concrete types are deduced by the type system wherever it is obvious.
 -}
 
 -- (b) Find a (simple) definition for a function h that has the following type
 h :: [b] -> [(a, b)] -> [b]
-
-
-
+h b _ = b
 
 -- (c) Find a (simple) definition for a function k that has the following type
-k :: (a -> b) -> ((a -> b) -> a) -> b
-
+-- k :: (a -> b) -> ((a -> b) -> a) -> b
+  {-
+    I could not figure out a simple definiton for function k. Since b is the
+    return type of another function, I'm not sure how to define a function that
+    would use b from that return type.
+  -}
 
 -- (d) Can you define a function of type a -> b? If yes, explain your
 -- definition. If not, explain why it is so difficult.
+  {-
+    I cannot define a function of type a -> b due to the fact that I don't know
+    anything about type b. What this function could be used for is converting
+    a value from any type to another type, however it would mean that you need
+    to ensure that the old and new types have identical internal
+    representations to prevent runtime corruption. To define a function like
+    this, I would need to know the internal representations of both types.
+  }
