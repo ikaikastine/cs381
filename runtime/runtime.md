@@ -21,6 +21,34 @@ passing.
 Illustrate the computations that take place during the evaluation of this block,
 that is, draw a sequence of pictures each showing the complete runtime stack
 with all activation records after each statement or function call.
+```
+0  []
+1  [x:?]
+2  [y:?, x:?]
+3  [y:1, x:?]
+4  [f{}, y:1, x:?]
+11 [f{}, f{}, y:1, x:?]
+>>
+  5 [x:2, f{}, y:1, x:?]  
+  8 [x:2, f{}, y:1, x:?]
+  >>
+    5 [x:1, x:2, f{}, y:1, x:?]
+    8 [x:1, x:2, f{}, y:1, x:?]
+    >>
+      5 [x:0, x:1, x:2, f{}, y:1, x:?]
+      6 [x:0, x:1, x:2, f{}, y:1, x:?]
+      9 [res:1, x:0, x:1, x:2, f{}, y:1, x:?]
+      <<
+    8 [x:1, x:2, f{}, y:2, x:?]
+    9 [res:2, x:1, x:2, f{}, y:2, x:?]
+    <<
+  8 [x:2, f{}, y:2, x:?]
+  9 [res:5, x:2, f:{}, y:5, x:?]
+  <<
+11 [f:{}, y:5, x:5]
+12 [y:5, x:5]
+12 []  
+```
 
 ### Exercise 2. Static and Dynamic Scope
 Consider the following block. Assume call-by-value parameter passing.
