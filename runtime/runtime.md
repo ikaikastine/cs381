@@ -70,7 +70,7 @@ Consider the following block. Assume call-by-value parameter passing.
 15     };
 16   }
 ```
-1. Which value will be assigned to z in line 12 under static scoping?
+##### (a) Which value will be assigned to z in line 12 under static scoping?
 ```
 0  []
 1  [x:?]
@@ -97,7 +97,7 @@ Consider the following block. Assume call-by-value parameter passing.
 15 [z:21, y:7, x:3]
 16 []
 ```
-2. Which value will be assigned to z in line 12 under dynamic scoping?
+##### (b) Which value will be assigned to z in line 12 under dynamic scoping?
 ```
 0  []
 1  [x:?]
@@ -128,23 +128,32 @@ Consider the following block. Assume call-by-value parameter passing.
 ### Exercise 3. Parameter Passing
 Consider the following block. Assume dynamic scoping.
 ```
-{ int y;
-  int z;
-  y := 7;
-  { int f(int a) {
-      y := a+1;
-      return (y+a)
-    };
-    int g(int x) {
-      y := f(x+1)+1;
-      z := f(x-y+3);
-      return (z+1)
-    }
-    z := g(y*2);
-  };
-}
+1    { int y;
+2      int z;
+3      y := 7;
+4      { int f(int a) {
+5          y := a+1;
+6          return (y+a)
+7        };
+8        int g(int x) {
+9          y := f(x+1)+1;
+10         z := f(x-y+3);
+11         return (z+1)
+12       }
+13       z := g(y*2);
+14     };
+15   }
 ```
 What are the values of y and z at the end of the above block under the
 assumption that both parameters a and x are passed:
-1. Call-by-Name
-2. Call-by-Need
+##### (a) Call-by-Name
+```
+1 []
+2 [y:?]
+3 [z:?, y:?]
+4 [z:?, y:7]
+5 [f{}, z:?, y:7]
+
+
+```
+##### (b) Call-by-Need
