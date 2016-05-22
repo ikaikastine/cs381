@@ -53,24 +53,51 @@ with all activation records after each statement or function call.
 ### Exercise 2. Static and Dynamic Scope
 Consider the following block. Assume call-by-value parameter passing.
 ```
-{ int x;
-  int y;
-  int z;
-  x := 3;
-  y := 7;
-  { int f(int y) { return x*y };
-    int y;
-    y := 11;
-    { int g(int x) { return f(y) };
-      { int y;
-        y := 12;
-        z := g(2);
-      };
-    };
-  };
-}
+1    { int x;
+2      int y;
+3      int z;
+4      x := 3;
+5      y := 7;
+6      { int f(int y) { return x*y };
+7        int y;
+8        y := 11;
+9        { int g(int x) { return f(y) };
+10         { int y;
+11           y := 13;
+12           z := g(2);
+13         };
+14       };
+15     };
+16   }
 ```
 1. Which value will be assigned to z in line 12 under static scoping?
+```
+0  []
+1  [x:?]
+2  [y:?, x:?]
+3  [z:?, y:?, x:?]
+4  [z:?, y:?, x:3]
+5  [z:?, y:7, x:3]
+6  [f{}, z:?, y:7, x:3]
+7  [y:?, f{}, z:?, y:7, x:3]
+8  [y:11, f{}, z:?, y:7, x:3]
+9  [g{}, y:11, f{}, z:?, y:7, x:3]
+10 [y:?, g{}, y:11, f{}, z:?, y:7, x:3]
+11 [y:13, g{}, y:11, f{}, z:?, y:7, x:3]  
+>>
+  9 [x:2, y:13, g{}, y:11, f{}, z:?, y:7, x:3]
+  >>
+    6 [res:21, y:7, x:2, y:13, g{}, y:11, f{}, z:?, y:7, x:3]
+    <<
+  9 [res:21, x:2, y:13, g{}, y:11, f{}, z:?, y:7, x:3]
+  <<
+12 [y:13, g{}, y:11, f{}, z:21, y:7, x:3]
+13 [g{}, y:11, f{}, z:21, y:7, x:3]
+14 [y:11, f{}, z:21, y:7, x:3]
+15 [z:21, y:7, x:3]
+16 []      
+```
+
 2. Which value will be assigned to z in line 12 under dynamic scoping?
 
 ### Exercise 3. Parameter Passing
