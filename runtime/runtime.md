@@ -95,7 +95,7 @@ Consider the following block. Assume call-by-value parameter passing.
 13 [g{}, y:11, f{}, z:21, y:7, x:3]
 14 [y:11, f{}, z:21, y:7, x:3]
 15 [z:21, y:7, x:3]
-16 []      
+16 []
 ```
 2. Which value will be assigned to z in line 12 under dynamic scoping?
 ```
