@@ -1,6 +1,6 @@
-## Homework 4: Runtime Stack, Scoping, Parameter Passing
+### Homework 4: Runtime Stack, Scoping, Parameter Passing
 
-### Exercise 1. Runtime Stack
+#### Exercise 1. Runtime Stack
 Consider the following block. Assume static scoping and call-by-value parameter
 passing.
 ```
@@ -50,7 +50,7 @@ with all activation records after each statement or function call.
 12 []  
 ```
 
-### Exercise 2. Static and Dynamic Scope
+#### Exercise 2. Static and Dynamic Scope
 Consider the following block. Assume call-by-value parameter passing.
 ```
 1    { int x;
@@ -125,7 +125,7 @@ Consider the following block. Assume call-by-value parameter passing.
 16 []
 ```
 
-### Exercise 3. Parameter Passing
+#### Exercise 3. Parameter Passing
 Consider the following block. Assume dynamic scoping.
 ```
 1    { int y;
