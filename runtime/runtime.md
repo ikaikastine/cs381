@@ -148,12 +148,31 @@ What are the values of y and z at the end of the above block under the
 assumption that both parameters a and x are passed:
 ##### (a) Call-by-Name
 ```
-1 []
-2 [y:?]
-3 [z:?, y:?]
-4 [z:?, y:7]
-5 [f{}, z:?, y:7]
-
-
+0  []
+1  [y:?]
+2  [z:?, y:?]
+3  [z:?, y:7]
+4  [f{}, z:?, y:7]
+8  [g:{}, f:{}, z:?, y:7]
+13 [g:{}, f:{}, z:?, y:7]
+>>
+  8 [x:y*2, g:{}, f:{}, z:?, y:7]
+  >>
+    4 [a:x+1, x:y*2, g:{}, f:{}, z:?, y:7]
+    5 [a:x+1, x:y*2, g:{}, f:{}, z:?, y:16]
+    6 [res:49, a:x+1, x:y*2, g:{}, f:{}, z:?, y:16]
+    <<
+  9 [x:y*2, g:{}, f:{}, z:?, y:50]
+  >>
+    4 [a:x-y+3, x:y*2, g:{}, f:{}, z:?, y:50]
+    5 [a:x-y+3, x:y*2, g:{}, f:{}, z:?, y:54]
+    6 [res:111, a:x-y+3, x:y*2, g:{}, f:{}, z:?, y:54]
+    <<
+  10 [x:y*2, g:{}, f:{}, z:111, y:54]
+  11 [res: 112, x:y*2, g:{}, f:{}, z:111, y:54]
+  <<
+13 [g:{}, f:{}, z:112, y:54]
+14 [z:112, y:54]
+15 []
 ```
 ##### (b) Call-by-Need
