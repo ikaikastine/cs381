@@ -32,3 +32,20 @@ conflict(C1,C2) :- where(C1,X), where(C2,X), when(C1,Y), when(C2,Y), C1\=C2.
 meet(S,R) :- schedule(S,P,T), schedule(R,P,T), schedule(S,P,T1), schedule(R,P,T2), T1\==T2+1.
 
 /* Exercise 2 */
+/* (a) rdup */
+rdup([],[]).
+rdup([A|L],M) :- L = [A|_], rdup(L,M).
+rdup([A|L],[A|M]) :- rdup(L,M).
+
+/* (b) flat */
+flat([], []).
+flat([A|L], F) :- flat(A, B) , flat(L, M) , append(B, M, F).
+flat(L, [L]).
+
+/* (c) project/3 */
+project([], _, [], _).
+project(_, [], [], _).
+project([I|Is], [X|Xs], [X|Ls], P) :- I =:= P, project(Is, Xs, Ls, P+1).
+project(Is, [_|Xs], Ls, P) :- project(Is, Xs, Ls, P+1).
+
+project(Is, Xs, Ls) :- project(Is, Xs, Ls, 1).
